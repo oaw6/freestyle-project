@@ -138,14 +138,57 @@ def getevent(custom_event_id):
     event = service.events().get(calendarId='primary', eventId=custom_event_id).execute()
     print(event['summary'])
 
+
+
+def updateevent(custom_event_id, new_summary_text, new_start_time, new_end_time, new_attendees):
+    creds = None
+    if os.path.exists('token.pickle'):
+        with open('token.pickle', 'rb') as token:
+            creds = pickle.load(token)
+    # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                #'credentials.json', SCOPES)
+                'client_id.json', SCOPES)
+            creds = flow.run_local_server()
+        # Save the credentials for the next run
+        with open('token.pickle', 'wb') as token:
+            pickle.dump(creds, token)
+
+    service = build('calendar', 'v3', credentials=creds)
+
+    #Gets and updates the event parameters
+    event = service.events().get(calendarId='primary', eventId=custom_event_id).execute()
+
+    event['summary'] = new_summary_text
+    event['start'] = new_start_time
+    event['end'] = new_end_time
+    event['attendees'] = new_attendees
+    #event['id'] = new_event_id
+
+    service.events().update(calendarId='primary', eventId=event['id'], body=event).execute()
+
+
+
 GMT_OFF = '-04:00'
 
 summary_test = 'Dinner with friends'
 start_time_test = {'dateTime': '2019-05-03T11:00:00%s' % GMT_OFF}
 end_time_test = {'dateTime': '2019-05-03T12:00:00%s' % GMT_OFF}
 attendees_test = []
-event_id_test = 'so20190503110000dinner1511it'
+event_id_test = 'so20190503110000dinner1511it1'
+
+update_summary_test = 'Dinner with some friends'
+update_start_time_test = {'dateTime': '2019-05-03T12:00:00%s' % GMT_OFF}
+update_end_time_test = {'dateTime': '2019-05-03T13:00:00%s' % GMT_OFF}
+update_attendees_test = []
+update_event_id_test = 'so20190503120000dinner1511it'
 
 #addnewevent(summary_test, start_time_test, end_time_test, attendees_test, event_id_test)
 #deleteevent(event_id_test)
 #getevent(event_id_test)
+
+updateevent(event_id_test, update_summary_test, update_start_time_test, update_end_time_test, update_attendees_test)
