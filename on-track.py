@@ -71,7 +71,7 @@ def tenevents():
         start = event['start'].get('dateTime', event['start'].get('date'))
         print(start, event['summary'])
 
-def addevent1():
+def addnewevent(summary_text, start_time, end_time, attendees):
     creds = None
     # The file token.pickle stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
@@ -85,7 +85,8 @@ def addevent1():
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials.json', SCOPES)
+                #'credentials.json', SCOPES)
+                'client_id.json', SCOPES)
             creds = flow.run_local_server()
         # Save the credentials for the next run
         with open('token.pickle', 'wb') as token:
@@ -94,19 +95,30 @@ def addevent1():
     service = build('calendar', 'v3', credentials=creds)
 
     #Adds the event
-    GMT_OFF = '-04:00' # EST/GMT-7
+    #GMT_OFF = '-04:00' # EST/GMT-7
     EVENT = {
-        'summary': 'Dinner with friends',
-        'start': {'dateTime': '2019-05-03T19:00:00%s' % GMT_OFF},
-        'end':   {'dateTime': '2019-05-03T22:00:00%s' % GMT_OFF},
-        'attendees': [],
+        #'summary': 'Dinner with friends',
+        'summary': summary_text,
+        #'start': {'dateTime': '2019-05-03T19:00:00%s' % GMT_OFF},
+        'start': start_time,
+        #'end':   {'dateTime': '2019-05-03T22:00:00%s' % GMT_OFF},
+        'end':   end_time,
+        #'attendees': [],
+        'attendees': attendees,
     }
     service.events().insert(calendarId='primary', body=EVENT).execute()
 
 #if __name__ == '__main__':
 #    main()
 
-tenevents()
+#tenevents()
 # [END calendar_quickstart]
 
-#addevent1()
+GMT_OFF = '-04:00'
+
+summary_test = 'Dinner with friends'
+start_time_test = {'dateTime': '2019-05-04T19:00:00%s' % GMT_OFF}
+end_time_test = {'dateTime': '2019-05-04T22:00:00%s' % GMT_OFF}
+attendees_test = []
+
+addnewevent(summary_test, start_time_test, end_time_test, attendees_test)
