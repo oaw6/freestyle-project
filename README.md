@@ -35,8 +35,7 @@ https://developers.google.com/calendar/quickstart/python
 
 Click Enable Google Calendar
 Download Client Configuration
-Client ID: 187732342759-hjmh8h2c22jjsm4ftvv4fhhtbi4gi7mi.apps.googleusercontent.com
-Client Secret: 0kw8JFfgu5PZfhaVWFslKBjL
+
 credentials.json in depo
 
 ```
@@ -49,6 +48,10 @@ With a Google Cloud Platform project created, you can now open Anaconda Prompt t
 
 ```
 pip install --upgrade google-api-python-client
+```
+
+```
+pip install pysimplegui
 ```
 
 This package library is not built in with Python's default run-time environment, so we have to copy the library to our repository. In Anaconda Prompt, navigate to the downloaded repository's directory. If you're using GitHub Desktop, this should be C:\Users\<Your Username>\Documents\GitHub\freestyle-project
