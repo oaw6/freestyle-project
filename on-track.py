@@ -71,7 +71,9 @@ def tenevents():
         start = event['start'].get('dateTime', event['start'].get('date'))
         print(start, event['summary'])
 
-def addnewevent(summary_text, start_time, end_time, attendees):
+
+
+def addnewevent(summary_text, start_time, end_time, attendees, custom_event_id):
     creds = None
     # The file token.pickle stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
@@ -95,30 +97,51 @@ def addnewevent(summary_text, start_time, end_time, attendees):
     service = build('calendar', 'v3', credentials=creds)
 
     #Adds the event
-    #GMT_OFF = '-04:00' # EST/GMT-7
     EVENT = {
-        #'summary': 'Dinner with friends',
         'summary': summary_text,
-        #'start': {'dateTime': '2019-05-03T19:00:00%s' % GMT_OFF},
         'start': start_time,
-        #'end':   {'dateTime': '2019-05-03T22:00:00%s' % GMT_OFF},
         'end':   end_time,
-        #'attendees': [],
         'attendees': attendees,
+        'id': custom_event_id,
     }
     service.events().insert(calendarId='primary', body=EVENT).execute()
 
-#if __name__ == '__main__':
-#    main()
+
+def deleteevent(custom_event_id):
+    creds = None
+    # The file token.pickle stores the user's access and refresh tokens, and is
+    # created automatically when the authorization flow completes for the first
+    # time.
+    if os.path.exists('token.pickle'):
+        with open('token.pickle', 'rb') as token:
+            creds = pickle.load(token)
+    # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                #'credentials.json', SCOPES)
+                'client_id.json', SCOPES)
+            creds = flow.run_local_server()
+        # Save the credentials for the next run
+        with open('token.pickle', 'wb') as token:
+            pickle.dump(creds, token)
+
+    service = build('calendar', 'v3', credentials=creds)
+
+    #Deletes the event
+    service.events().delete(calendarId='primary', eventId=custom_event_id).execute()
 
 #tenevents()
-# [END calendar_quickstart]
 
 GMT_OFF = '-04:00'
 
 summary_test = 'Dinner with friends'
-start_time_test = {'dateTime': '2019-05-04T19:00:00%s' % GMT_OFF}
-end_time_test = {'dateTime': '2019-05-04T22:00:00%s' % GMT_OFF}
+start_time_test = {'dateTime': '2019-05-03T11:00:00%s' % GMT_OFF}
+end_time_test = {'dateTime': '2019-05-03T12:00:00%s' % GMT_OFF}
 attendees_test = []
+event_id_test = '20190503110000dinner1511it'
 
-addnewevent(summary_test, start_time_test, end_time_test, attendees_test)
+#addnewevent(summary_test, start_time_test, end_time_test, attendees_test, event_id_test)
+deleteevent(event_id_test)
