@@ -8,6 +8,7 @@ This is the README file for the On Track repository. Below you'll find instructi
   + Python 3.7
   + Pip
   + Google Account with Google Calendar Enabled
+    - Recommended not to use a school email, as firewalls may prevent API coordination
   
 ## Initial Cleanup
 Because the Google Cloud Platform and Google's API authentication requires a certain step-by-step process to function properly, once you download this repository you must first delete the "lib" folder. You will recreate this folder and its contents while setting up the program later in this file.
@@ -25,6 +26,8 @@ Once your free trial is established, you will be taken to the Google Cloud Platf
 Name the project whatever you want, though to lessen confusion it is recommended that you label it "On Track". A unique project id will be generated from this name. Once this has happened, click "Create" to finalize your new project. This project is necessary to engage with Google's APIs.
 
 You should now be on either the "Getting Started" page or your new project's Home page. Either way, in the search bar at the top of the screen type "Calendar API" and an option should appear for the Google Calendar API. Click this. On the resulting page, click "Enable API", and this will link your Google account with the API to allow you to access the Calendar API.
+
+Next, you will have to set up credentials to authorize access to the API. Click on "APIs and Services" in the left sidebar, and then click "Credentials" on the resulting page. 
 
 ## Python Quickstart
 
