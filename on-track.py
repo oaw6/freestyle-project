@@ -18,6 +18,9 @@ import sys
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/calendar']
+#initial_school_list = ''
+#initial_job_list = ''
+#initial_social_list = ''
 
 def tenevents():
     """Shows basic usage of the Google Calendar API.
@@ -272,6 +275,58 @@ def initial_window_test():
 def initial_window():
 
     #Should do initial info grab here...
+
+    creds = None
+    if os.path.exists('token.pickle'):
+        with open('token.pickle', 'rb') as token:
+            creds = pickle.load(token)
+    # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                #'credentials.json', SCOPES)
+                'client_id.json', SCOPES)
+            creds = flow.run_local_server()
+        # Save the credentials for the next run
+        with open('token.pickle', 'wb') as token:
+            pickle.dump(creds, token)
+
+    service = build('calendar', 'v3', credentials=creds)
+    
+    #Reads next 15 calendar events, then filters/feeds them into lists
+    now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+    events_result = service.events().list(calendarId='primary', timeMin=now,
+                                        maxResults=15, singleEvents=True,
+                                        orderBy='startTime').execute()
+    events = events_result.get('items', [])
+    page_type = 'initial'
+    if page_type == 'initial':
+        #Runs this for the initial window
+        school_list = ''
+        job_list = ''
+        social_list = ''
+        if not events:
+            school_list = 'No upcoming events'
+            job_list = 'No upcoming events'
+            school_list = 'No upcoming events'
+        for event in events:
+            if event['id'].startswith('sc'):
+                school_list = school_list + "\n" + event['summary'] + "\n" + event['start'].get('dateTime', event['start'].get('date'))
+            elif event['id'].startswith('jo'):
+                job_list = job_list + "\n" + event['summary'] + "\n" + event['start'].get('dateTime', event['start'].get('date'))
+            elif event['id'].startswith('so'):
+                social_list = social_list + "\n" + event['summary'] + "\n" + event['start'].get('dateTime', event['start'].get('date'))
+        if school_list == '':
+            school_list = 'No upcoming events'
+        if job_list == '':
+            job_list = 'No upcoming events'
+        if social_list == '':
+            social_list = 'No upcoming events'
+        initial_school_list = school_list
+        initial_job_list = job_list
+        initial_social_list = social_list
     
     sg.ChangeLookAndFeel('GreenTan')
 
@@ -279,19 +334,19 @@ def initial_window():
 
     column1 = [
         [sg.Text('School', size=(5, 1), font=("Helvetica", 25))],
-        [sg.Multiline(default_text='Test list item\nSecond line', disabled=True, size=(30, 3))],
+        [sg.Multiline(default_text=initial_school_list, disabled=True, size=(30, 10))],
         [sg.Button('Add New Assignment', key='add_assignment', button_color=('white', '#001480'))],
         [sg.Button('Manage Current Assignments', key='manage_assignments', button_color=('white', '#001480'))]
     ]
     column2 = [
         [sg.Text('Jobs', size=(5, 1), font=("Helvetica", 25))],
-        [sg.Multiline(default_text='Test list item\nSecond line', disabled=True, size=(30, 3))],
+        [sg.Multiline(default_text=initial_job_list, disabled=True, size=(30, 10))],
         [sg.Button('Add New Job Application', key='add_job', button_color=('white', '#001480'))],
         [sg.Button('Manage Current Job Applications', key='manage_applications', button_color=('white', '#001480'))]
     ]
     column3 = [
         [sg.Text('Social', size=(5, 1), font=("Helvetica", 25))],
-        [sg.Multiline(default_text='Test list item\nSecond line', disabled=True, size=(30, 3))],
+        [sg.Multiline(default_text=initial_social_list, disabled=True, size=(30, 10))],
         [sg.Button('Add New Event', key='add_event', button_color=('white', '#001480'))],
         [sg.Button('Manage Current Events', key='manage_events', button_color=('white', '#001480'))]
     ]
@@ -308,4 +363,4 @@ def initial_window():
     sg.Popup(button, values)
 
 #initial_window_test()
-#initial_window()
+initial_window()
