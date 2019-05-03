@@ -212,8 +212,19 @@ def writeeventtocsv(event_id, summary_text, start_time, end_time, attendees):
 
 
 
-def createeventid(type, start_time, end_time, summary_ten):
-    return
+def createeventid(type, end_time, summary_ten):
+    new_event_id = ''
+    if type == 'school':
+        new_event_id = new_event_id + 'sc'
+    new_event_id = new_event_id + end_time[:4] + end_time[5:7] + end_time[8:10] + end_time[11:13] + end_time[14:16] + end_time[17:19]
+    unrefined_summary = summary_ten.lower()
+    summ_ten = unrefined_summary.replace('w', '11')
+    summ_ten = summ_ten.replace('x', '12')
+    summ_ten = summ_ten.replace('y', '13')
+    summ_ten = summ_ten.replace('z', '14')
+    summ_ten = summ_ten.replace(' ', '15')
+    new_event_id = new_event_id + summ_ten
+    return new_event_id
 
 
 
@@ -414,18 +425,27 @@ def add_assignment():
     if button == 'Submit':
         event_summary = values[0] + " due at " + values[2]
         end_time = values[2]
-        start_adjust = int(end_time[3:5]) - 15
-        formatted_start_string = end_time[:3] + str(start_adjust) + end_time[5:]
+        if int(end_time[3:5]) >= 15:
+            start_adjust = int(end_time[3:5]) - 15
+        else:
+            start_adjust = int(end_time[3:5]) + 45
+        formatted_start_string = values[1] + 'T' + end_time[:3] + str(start_adjust) + end_time[5:] + '%s'
         event_start = {'datetime': formatted_start_string % GMT_OFF}
-        formatted_end_string = values[1] + "T" + values[2] + "%s"
+        formatted_end_string = values[1] + 'T' + values[2] + '%s'
         event_end = {'datetime': formatted_end_string % GMT_OFF}
         event_attendees = values[3]
         full_summary = values[0]
         if len(full_summary) >= 10:
-            summary_10 = full_summary[:11]
+            summaryten = full_summary[:11]
         else:
             summary_length = int(len(full_summary)) + 1
-            summary_10 = full_summary[:summary_length]
+            summaryten = full_summary[:summary_length]
+        event_id = createeventid('school', formatted_end_string, summaryten)
+        #print(event_summary, event_start, event_end, event_attendees, event_id)
+
+        addnewevent(event_summary, event_start, event_end, event_attendees, event_id)
+        writeeventtocsv(event_id, event_summary, event_start, event_end, event_attendees)
+
 
 
 
