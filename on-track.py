@@ -2,6 +2,7 @@
 
 from __future__ import print_function
 import datetime
+from datetime import datetime
 import pickle
 import os.path
 from googleapiclient.discovery import build
@@ -310,7 +311,7 @@ def initial_window():
     service = build('calendar', 'v3', credentials=creds)
     
     #Reads next 15 calendar events, then filters/feeds them into lists
-    now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+    now = datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
     events_result = service.events().list(calendarId='primary', timeMin=now,
                                         maxResults=15, singleEvents=True,
                                         orderBy='startTime').execute()
@@ -416,6 +417,7 @@ def add_assignment():
         [sg.InputText('', size=(20, 2)), sg.InputText('', size=(20, 2))],
         [sg.Text('Group Members (emails, separate by commas)')],
         [sg.InputText('', size=(60, 3))],
+        [sg.Checkbox('Are there sub-assignments?', default=False)],
         [sg.Submit(), sg.Cancel()]
     ]
 
@@ -429,11 +431,23 @@ def add_assignment():
             start_adjust = int(end_time[3:5]) - 15
         else:
             start_adjust = int(end_time[3:5]) + 45
-        formatted_start_string = values[1] + 'T' + end_time[:3] + str(start_adjust) + end_time[5:] + '%s'
-        event_start = {'datetime': formatted_start_string % GMT_OFF}
+            if int(end_time[:2]) >= 1:
+                hour_adjust = int(end_time[:2]) - 1
+                if hour_adjust <= 9:
+                    hour_string = '0' + str(hour_adjust)
+                else:
+                    hour_string = str(hour_adjust)
+            else:
+                hour_string = str(23)
+        formatted_start_string = values[1] + 'T' + hour_string + ':' + str(start_adjust) + end_time[5:] + '%s'
+        event_start = {'dateTime': formatted_start_string % GMT_OFF}
         formatted_end_string = values[1] + 'T' + values[2] + '%s'
-        event_end = {'datetime': formatted_end_string % GMT_OFF}
+        event_end = {'dateTime': formatted_end_string % GMT_OFF}
         event_attendees = values[3]
+        if not event_attendees:
+            event_attendees = []
+        elif event_attendees == '':
+            event_attendees = []
         full_summary = values[0]
         if len(full_summary) >= 10:
             summaryten = full_summary[:11]
@@ -445,6 +459,9 @@ def add_assignment():
 
         addnewevent(event_summary, event_start, event_end, event_attendees, event_id)
         writeeventtocsv(event_id, event_summary, event_start, event_end, event_attendees)
+
+        if values[4] == True:
+            return
 
 
 
