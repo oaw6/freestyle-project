@@ -1,0 +1,4 @@
+,id,summary,start,end,attendees,active
+0,so20190503133000dinner1511it,Dinner with friends,{'dateTime': '2019-05-03T13:30:00-04:00'},{'dateTime': '2019-05-03T14:00:00-04:00'},[],active
+1,so20190503143000dinner1511it,Dinner with friends,{'dateTime': '2019-05-03T14:30:00-04:00'},{'dateTime': '2019-05-03T15:00:00-04:00'},[],active
+2,so20190503153000dinner1511it,Dinner with friends,{'dateTime': '2019-05-03T15:30:00-04:00'},{'dateTime': '2019-05-03T16:00:00-04:00'},[],active
