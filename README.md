@@ -11,6 +11,7 @@ This is the README file for the On Track repository. Below you'll find instructi
     - Recommended not to use a school email, as firewalls may prevent API coordination
   
 ## Initial Cleanup
+
 Because the Google Cloud Platform and Google's API authentication requires a certain step-by-step process to function properly, once you download this repository you must first delete the "lib" folder. You will recreate this folder and its contents while setting up the program later in this file.
 
 ## Setting Up a Google Cloud Platform project and enabling the Calendar API
@@ -27,34 +28,21 @@ Name the project whatever you want, though to lessen confusion it is recommended
 
 You should now be on either the "Getting Started" page or your new project's Home page. Either way, in the search bar at the top of the screen type "Calendar API" and an option should appear for the Google Calendar API. Click this. On the resulting page, click "Enable API", and this will link your Google account with the API to allow you to access the Calendar API.
 
-Next, you will have to set up credentials to authorize access to the API. Click on "APIs and Services" in the left sidebar, and then click "Credentials" on the resulting page. 
-
-## Python Quickstart
-
-https://developers.google.com/calendar/quickstart/python
-
-Click Enable Google Calendar
-Download Client Configuration
-
-credentials.json in depo
-
-```
-pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
-```
+Next, you will have to set up credentials to authorize access to the API. Click on "APIs and Services" in the left sidebar, and then click "Credentials" on the resulting page. Here, you'll have to create OAuth authorization credentials for the API. Follow the instructions on this page, and then download the resulting file and place it in the repository. It should be titled "client_id.json".
 
 ## Installing Package Dependencies
 
-With a Google Cloud Platform project created, you can now open Anaconda Prompt to install Python libraries. With the console open, type the following line of code:
+With a Google Cloud Platform project created, you can now open Anaconda Prompt to install Python libraries. With the console open, create and activate a new environment and type the following lines of code:
 
 ```
-pip install --upgrade google-api-python-client
+pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
 ```
 
 ```
 pip install pysimplegui
 ```
 
-This package library is not built in with Python's default run-time environment, so we have to copy the library to our repository. In Anaconda Prompt, navigate to the downloaded repository's directory. If you're using GitHub Desktop, this should be C:\Users\<Your Username>\Documents\GitHub\freestyle-project
+The Python package library is not built in with Python's default run-time environment, so we have to copy the library to our repository. In Anaconda Prompt, navigate to the downloaded repository's directory. If you're using GitHub Desktop, this should be C:\Users\<Your Username>\Documents\GitHub\freestyle-project
 
 Once in this directory, run the following to lines of code (separately and in order):
 
@@ -66,3 +54,10 @@ mkdir lib
 pip install -t lib/ google-api-python-client
 ```
 
+## Running the Application
+
+That's all the set-up required! Now, to run the application, with the environment active in Anaconda prompt simply type the following:
+
+```
+python on-track.py
+```
