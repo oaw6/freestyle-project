@@ -212,6 +212,11 @@ def writeeventtocsv(event_id, summary_text, start_time, end_time, attendees):
 
 
 
+def createeventid(type, start_time, end_time, summary_ten):
+    return
+
+
+
 GMT_OFF = '-04:00'
 
 summary_test = 'Dinner with friends'
@@ -273,8 +278,6 @@ def initial_window_test():
 
 
 def initial_window():
-
-    #Should do initial info grab here...
 
     creds = None
     if os.path.exists('token.pickle'):
@@ -360,7 +363,71 @@ def initial_window():
     ]
 
     button, values = form.Layout(layout).Read()
-    sg.Popup(button, values)
+    #sg.Popup(button, values)
+
+    if button == 'add_assignment':
+        add_assignment()
+
+
+
+def add_assignment():
+    creds = None
+    if os.path.exists('token.pickle'):
+        with open('token.pickle', 'rb') as token:
+            creds = pickle.load(token)
+    # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                #'credentials.json', SCOPES)
+                'client_id.json', SCOPES)
+            creds = flow.run_local_server()
+        # Save the credentials for the next run
+        with open('token.pickle', 'wb') as token:
+            pickle.dump(creds, token)
+
+    service = build('calendar', 'v3', credentials=creds)
+    
+    # Creates input window for the new event
+    
+    sg.ChangeLookAndFeel('GreenTan')
+
+    form = sg.FlexForm('On Track', default_element_size=(10, 3))
+
+    layout = [
+        [sg.Button('Notification Settings', key='notifications', button_color=('white', '#001480'))],
+        [sg.Text('Input New Assignment Information', size=(30, 1), font=("Helvetica", 25))],
+        [sg.Text('Assignment Title')],
+        [sg.InputText('', size=(30, 2))],
+        [sg.Text('Due Date (yyyy-mm-dd)'), sg.Text('Time Assignment is due (hh:mm:ss)')],
+        [sg.InputText('', size=(20, 2)), sg.InputText('', size=(20, 2))],
+        [sg.Text('Group Members (emails, separate by commas)')],
+        [sg.InputText('', size=(60, 3))],
+        [sg.Submit(), sg.Cancel()]
+    ]
+
+    button, values = form.Layout(layout).Read()
+    #sg.Popup(button, values)
+
+    if button == 'Submit':
+        event_summary = values[0] + " due at " + values[2]
+        end_time = values[2]
+        start_adjust = int(end_time[3:5]) - 15
+        formatted_start_string = end_time[:3] + str(start_adjust) + end_time[5:]
+        event_start = {'datetime': formatted_start_string % GMT_OFF}
+        formatted_end_string = values[1] + "T" + values[2] + "%s"
+        event_end = {'datetime': formatted_end_string % GMT_OFF}
+        event_attendees = values[3]
+        full_summary = values[0]
+        if len(full_summary) >= 10:
+            summary_10 = full_summary[:11]
+        else:
+            summary_length = int(len(full_summary)) + 1
+            summary_10 = full_summary[:summary_length]
+
+
 
 #initial_window_test()
 initial_window()
