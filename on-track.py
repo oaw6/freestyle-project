@@ -239,6 +239,10 @@ def createeventid(type, end_time, summary_ten):
     new_event_id = ''
     if type == 'school':
         new_event_id = new_event_id + 'sc'
+    elif type == 'job':
+        new_event_id = new_event_id + 'jo'
+    else:
+        new_event_id = new_event_id + 'so'
     new_event_id = new_event_id + end_time[:4] + end_time[5:7] + end_time[8:10] + end_time[11:13] + end_time[14:16] + end_time[17:19]
     unrefined_summary = summary_ten.lower()
     summ_ten = unrefined_summary.replace('w', '11')
@@ -257,7 +261,7 @@ summary_test = 'Dinner with friends'
 start_time_test = {'dateTime': '2019-05-03T15:30:00%s' % GMT_OFF}
 end_time_test = {'dateTime': '2019-05-03T16:00:00%s' % GMT_OFF}
 attendees_test = []
-event_id_test = 'so20190503153000dinner1511it'
+event_id_test = '20190506170000jefferies15a'
 
 update_summary_test = 'Dinner with some friends'
 update_start_time_test = {'dateTime': '2019-05-03T12:00:00%s' % GMT_OFF}
@@ -401,6 +405,16 @@ def initial_window():
 
     if button == 'add_assignment':
         add_assignment()
+    elif button == 'add_job':
+        add_job_application()
+    elif button == 'add_event':
+        add_social()
+    elif button == 'manage_assignments':
+        manage_assignments()
+    elif button == 'manage_applications':
+        manage_applications()
+    elif button == 'manage_events':
+        manage_socials()
 
 
 
@@ -897,6 +911,283 @@ def sub_social(linked_event_id):
 
         if values[4] == True:
             sub_assignment(linked_event_id)
+
+
+
+def manage_assignments():
+    creds = None
+    if os.path.exists('token.pickle'):
+        with open('token.pickle', 'rb') as token:
+            creds = pickle.load(token)
+    # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                #'credentials.json', SCOPES)
+                'client_id.json', SCOPES)
+            creds = flow.run_local_server()
+        # Save the credentials for the next run
+        with open('token.pickle', 'wb') as token:
+            pickle.dump(creds, token)
+
+    service = build('calendar', 'v3', credentials=creds)
+    
+    #Reads next few school events
+    now = datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+    events_result = service.events().list(calendarId='primary', timeMin=now,
+                                        maxResults=25, singleEvents=True,
+                                        orderBy='startTime').execute()
+    events = events_result.get('items', [])
+
+    school_list = ''
+    school_id_list = []
+    if not events:
+        school_list = 'No upcoming events'
+    for event in events:
+        if event['id'].startswith('sc'):
+            school_list = school_list + "\n" + event['summary'] + "\n" + event['start'].get('dateTime', event['start'].get('date'))
+            school_id_list.append(event['id'])
+    if school_list == '':
+        school_list = 'No upcoming events'
+    initial_school_list = school_list
+    
+    sg.ChangeLookAndFeel('GreenTan')
+
+    form = sg.FlexForm('On Track', default_element_size=(10, 3))
+
+    layout = [
+        [sg.Button('Notification Settings', key='notifications', button_color=('white', '#001480'))],
+        [sg.Text('Upcoming Assignments', size=(30, 2), font=("Helvetica", 25))],
+        [sg.Multiline(default_text=initial_school_list, disabled=True, size=(30, 10))],
+        [sg.Text('Type in which event you want to edit (1 for first, 2 for second, etc.)')],
+        [sg.InputText('', size=(30, 2))],
+        [sg.Button('Edit Assignment', key='edit_assignment', button_color=('white', '#001480')), sg.Button('Delete Assignment', key='delete_assignment', button_color=('white', '#001480'))],
+        [sg.Cancel()]
+    ]
+
+    button, values = form.Layout(layout).Read()
+    #sg.Popup(button, values)
+
+    if button == 'edit_assignment':
+        chosen_assignment = int(values[1]) - 1
+        chosen_id = school_id_list[chosen_assignment]
+        edit_page(chosen_id)
+    elif button == 'delete_assignment':
+        chosen_assignment = int(values[1]) - 1
+        chosen_id = school_id_list[chosen_assignment]
+        deleteevent(chosen_id)
+
+
+
+def manage_applications():
+    creds = None
+    if os.path.exists('token.pickle'):
+        with open('token.pickle', 'rb') as token:
+            creds = pickle.load(token)
+    # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                #'credentials.json', SCOPES)
+                'client_id.json', SCOPES)
+            creds = flow.run_local_server()
+        # Save the credentials for the next run
+        with open('token.pickle', 'wb') as token:
+            pickle.dump(creds, token)
+
+    service = build('calendar', 'v3', credentials=creds)
+    
+    #Reads next few job events
+    now = datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+    events_result = service.events().list(calendarId='primary', timeMin=now,
+                                        maxResults=25, singleEvents=True,
+                                        orderBy='startTime').execute()
+    events = events_result.get('items', [])
+
+    job_list = ''
+    job_id_list = []
+    if not events:
+        job_list = 'No upcoming events'
+    for event in events:
+        if event['id'].startswith('jo'):
+            job_list = job_list + "\n" + event['summary'] + "\n" + event['start'].get('dateTime', event['start'].get('date'))
+            job_id_list.append(event['id'])
+    if job_list == '':
+        job_list = 'No upcoming events'
+    initial_job_list = job_list
+    
+    sg.ChangeLookAndFeel('GreenTan')
+
+    form = sg.FlexForm('On Track', default_element_size=(10, 3))
+
+    layout = [
+        [sg.Button('Notification Settings', key='notifications', button_color=('white', '#001480'))],
+        [sg.Text('Upcoming Applications', size=(30, 2), font=("Helvetica", 25))],
+        [sg.Multiline(default_text=initial_job_list, disabled=True, size=(30, 10))],
+        [sg.Text('Type in which item you want to edit (1 for first, 2 for second, etc.)')],
+        [sg.InputText('', size=(30, 2))],
+        [sg.Button('Edit Item', key='edit_item', button_color=('white', '#001480')), sg.Button('Delete Item', key='delete_item', button_color=('white', '#001480'))],
+        [sg.Cancel()]
+    ]
+
+    button, values = form.Layout(layout).Read()
+    #sg.Popup(button, values)
+
+    if button == 'edit_item':
+        chosen_assignment = int(values[1]) - 1
+        chosen_id = job_id_list[chosen_assignment]
+        edit_page(chosen_id)
+    elif button == 'delete_item':
+        chosen_assignment = int(values[1]) - 1
+        chosen_id = job_id_list[chosen_assignment]
+        deleteevent(chosen_id)
+
+
+
+def manage_socials():
+    creds = None
+    if os.path.exists('token.pickle'):
+        with open('token.pickle', 'rb') as token:
+            creds = pickle.load(token)
+    # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                #'credentials.json', SCOPES)
+                'client_id.json', SCOPES)
+            creds = flow.run_local_server()
+        # Save the credentials for the next run
+        with open('token.pickle', 'wb') as token:
+            pickle.dump(creds, token)
+
+    service = build('calendar', 'v3', credentials=creds)
+    
+    #Reads next few school events
+    now = datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+    events_result = service.events().list(calendarId='primary', timeMin=now,
+                                        maxResults=25, singleEvents=True,
+                                        orderBy='startTime').execute()
+    events = events_result.get('items', [])
+
+    school_list = ''
+    school_id_list = []
+    if not events:
+        school_list = 'No upcoming events'
+    for event in events:
+        if event['id'].startswith('so'):
+            school_list = school_list + "\n" + event['summary'] + "\n" + event['start'].get('dateTime', event['start'].get('date'))
+            school_id_list.append(event['id'])
+    if school_list == '':
+        school_list = 'No upcoming events'
+    initial_school_list = school_list
+    
+    sg.ChangeLookAndFeel('GreenTan')
+
+    form = sg.FlexForm('On Track', default_element_size=(10, 3))
+
+    layout = [
+        [sg.Button('Notification Settings', key='notifications', button_color=('white', '#001480'))],
+        [sg.Text('Upcoming Events', size=(30, 2), font=("Helvetica", 25))],
+        [sg.Multiline(default_text=initial_school_list, disabled=True, size=(30, 10))],
+        [sg.Text('Type in which event you want to edit (1 for first, 2 for second, etc.)')],
+        [sg.InputText('', size=(30, 2))],
+        [sg.Button('Edit Event', key='edit_event', button_color=('white', '#001480')), sg.Button('Delete Event', key='delete_event', button_color=('white', '#001480'))],
+        [sg.Cancel()]
+    ]
+
+    button, values = form.Layout(layout).Read()
+    #sg.Popup(button, values)
+
+    if button == 'edit_event':
+        chosen_assignment = int(values[1]) - 1
+        chosen_id = school_id_list[chosen_assignment]
+        edit_page(chosen_id)
+    elif button == 'delete_event':
+        chosen_assignment = int(values[1]) - 1
+        chosen_id = school_id_list[chosen_assignment]
+        deleteevent(chosen_id)
+
+
+
+def edit_page(chosen_event_id):
+    creds = None
+    if os.path.exists('token.pickle'):
+        with open('token.pickle', 'rb') as token:
+            creds = pickle.load(token)
+    # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                #'credentials.json', SCOPES)
+                'client_id.json', SCOPES)
+            creds = flow.run_local_server()
+        # Save the credentials for the next run
+        with open('token.pickle', 'wb') as token:
+            pickle.dump(creds, token)
+
+    service = build('calendar', 'v3', credentials=creds)
+    
+    # Creates input window for the new event
+    
+    sg.ChangeLookAndFeel('GreenTan')
+
+    form = sg.FlexForm('On Track', default_element_size=(10, 3))
+
+    layout = [
+        [sg.Button('Notification Settings', key='notifications', button_color=('white', '#001480'))],
+        [sg.Text('Input New Information', size=(30, 1), font=("Helvetica", 25))],
+        [sg.Text('New Title')],
+        [sg.InputText('', size=(30, 2))],
+        [sg.Text('New Due Date (yyyy-mm-dd)'), sg.Text('New Time Due (hh:mm:ss)')],
+        [sg.InputText('', size=(20, 2)), sg.InputText('', size=(20, 2))],
+        [sg.Text('New Group Members (emails, separate by commas)')],
+        [sg.InputText('', size=(60, 3))],
+        [sg.Submit(), sg.Cancel()]
+    ]
+
+    button, values = form.Layout(layout).Read()
+    #sg.Popup(button, values)
+
+    if button == 'Submit':
+        event_summary = values[0] + " due at " + values[2]
+        end_time = values[2]
+        if int(end_time[3:5]) >= 15:
+            start_adjust = int(end_time[3:5]) - 15
+        else:
+            start_adjust = int(end_time[3:5]) + 45
+            if int(end_time[:2]) >= 1:
+                hour_adjust = int(end_time[:2]) - 1
+                if hour_adjust <= 9:
+                    hour_string = '0' + str(hour_adjust)
+                else:
+                    hour_string = str(hour_adjust)
+            else:
+                hour_string = str(23)
+        formatted_start_string = values[1] + 'T' + hour_string + ':' + str(start_adjust) + end_time[5:] + '%s'
+        event_start = {'dateTime': formatted_start_string % GMT_OFF}
+        formatted_end_string = values[1] + 'T' + values[2] + '%s'
+        event_end = {'dateTime': formatted_end_string % GMT_OFF}
+        event_attendees = values[3]
+        if not event_attendees:
+            event_attendees = []
+        elif event_attendees == '':
+            event_attendees = []
+        full_summary = values[0]
+        if len(full_summary) >= 10:
+            summaryten = full_summary[:11]
+        else:
+            summary_length = int(len(full_summary)) + 1
+            summaryten = full_summary[:summary_length]
+        
+        updateevent(chosen_event_id, event_summary, event_start, event_end, event_attendees)
 
 
 
