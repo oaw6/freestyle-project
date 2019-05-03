@@ -9,6 +9,12 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from httplib2 import Http
 import PySimpleGUI as sg
+import pandas
+import csv
+import os
+import requests
+import sys
+
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/calendar']
@@ -174,13 +180,42 @@ def updateevent(custom_event_id, new_summary_text, new_start_time, new_end_time,
 
 
 
+def writeeventtocsv(event_id, summary_text, start_time, end_time, attendees):
+    #Reads the csv file and converts the data to a list of dictionaries
+    chosen_file_path = os.path.join(os.path.dirname(__file__), "data", "eventlist.csv")
+    event_list = []
+    with open(chosen_file_path, "r") as csv_file:
+        reader = csv.DictReader(csv_file)
+        for row in reader:
+            event_list.append(dict(row))
+    
+    #Adds new event to list of dictionaries, converts back to csv and overwrites data file
+    event_list.append({"id":event_id, "summary":summary_text, "start":start_time, "end":end_time, "attendees":attendees})
+    event_id_list = []
+    event_summary_list = []
+    event_start_list = []
+    event_end_list = []
+    event_attendees_list = []
+    event_active_list = []
+    for rowitem in event_list:
+        event_id_list.append(rowitem["id"])
+        event_summary_list.append(rowitem["summary"])
+        event_start_list.append(rowitem["start"])
+        event_end_list.append(rowitem["end"])
+        event_attendees_list.append(rowitem["attendees"])
+        event_active_list.append('active')
+    pandas_data = pandas.DataFrame({'id':event_id_list,'summary':event_summary_list, 'start': event_start_list,'end': event_end_list,'attendees': event_attendees_list, 'active': event_active_list})
+    pandas_data.to_csv('./data/eventlist.csv')
+
+
+
 GMT_OFF = '-04:00'
 
 summary_test = 'Dinner with friends'
-start_time_test = {'dateTime': '2019-05-03T11:00:00%s' % GMT_OFF}
-end_time_test = {'dateTime': '2019-05-03T12:00:00%s' % GMT_OFF}
+start_time_test = {'dateTime': '2019-05-03T15:30:00%s' % GMT_OFF}
+end_time_test = {'dateTime': '2019-05-03T16:00:00%s' % GMT_OFF}
 attendees_test = []
-event_id_test = 'so20190503110000dinner1511it1'
+event_id_test = 'so20190503153000dinner1511it'
 
 update_summary_test = 'Dinner with some friends'
 update_start_time_test = {'dateTime': '2019-05-03T12:00:00%s' % GMT_OFF}
@@ -193,7 +228,7 @@ update_event_id_test = 'so20190503120000dinner1511it'
 #getevent(event_id_test)
 
 #updateevent(event_id_test, update_summary_test, update_start_time_test, update_end_time_test, update_attendees_test)
-
+#writeeventtocsv(event_id_test, summary_test, start_time_test, end_time_test, attendees_test)
 
 
 # PySimpleGUI Code
@@ -232,8 +267,12 @@ def initial_window_test():
     button, values = form.Layout(layout).Read()
     sg.Popup(button, values)
 
+
+
 def initial_window():
 
+    #Should do initial info grab here...
+    
     sg.ChangeLookAndFeel('GreenTan')
 
     form = sg.FlexForm('On Track', default_element_size=(10, 3))
@@ -269,4 +308,4 @@ def initial_window():
     sg.Popup(button, values)
 
 #initial_window_test()
-initial_window()
+#initial_window()
