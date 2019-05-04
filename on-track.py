@@ -290,26 +290,26 @@ def initial_window():
     form = sg.FlexForm('On Track', default_element_size=(10, 3))
 
     column1 = [
-        [sg.Text('School', size=(5, 1), font=("Helvetica", 25))],
+        [sg.Text('School', size=(5, 1), font=("Helvetica", 25), background_color='#d3dfda')],
         [sg.Multiline(default_text=initial_school_list, disabled=True, size=(30, 10))],
-        [sg.Button('Add New Assignment', key='add_assignment', button_color=('white', '#001480'))],
-        [sg.Button('Manage Current Assignments', key='manage_assignments', button_color=('white', '#001480'))]
+        [sg.Button('Add New Assignment', key='add_assignment', button_color=('white', '#008B8B'))],
+        [sg.Button('Manage Current Assignments', key='manage_assignments', button_color=('white', '#008B8B'))]
     ]
     column2 = [
-        [sg.Text('Jobs', size=(5, 1), font=("Helvetica", 25))],
+        [sg.Text('Jobs', size=(5, 1), font=("Helvetica", 25), background_color='#d3dfda')],
         [sg.Multiline(default_text=initial_job_list, disabled=True, size=(30, 10))],
-        [sg.Button('Add New Job Application', key='add_job', button_color=('white', '#001480'))],
-        [sg.Button('Manage Current Job Applications', key='manage_applications', button_color=('white', '#001480'))]
+        [sg.Button('Add New Job Application', key='add_job', button_color=('white', '#008B8B'))],
+        [sg.Button('Manage Current Job Applications', key='manage_applications', button_color=('white', '#008B8B'))]
     ]
     column3 = [
-        [sg.Text('Social', size=(5, 1), font=("Helvetica", 25))],
+        [sg.Text('Social', size=(5, 1), font=("Helvetica", 25), background_color='#d3dfda')],
         [sg.Multiline(default_text=initial_social_list, disabled=True, size=(30, 10))],
-        [sg.Button('Add New Event', key='add_event', button_color=('white', '#001480'))],
-        [sg.Button('Manage Current Events', key='manage_events', button_color=('white', '#001480'))]
+        [sg.Button('Add New Event', key='add_event', button_color=('white', '#008B8B'))],
+        [sg.Button('Manage Current Events', key='manage_events', button_color=('white', '#008B8B'))]
     ]
 
     layout = [
-        [sg.Button('Notification Settings', key='notifications', button_color=('white', '#001480'))],
+        [sg.Button('Notification Settings', key='notifications', button_color=('white', '#008B8B'))],
         [sg.Column(column1, background_color='#d3dfda'),
         sg.Column(column2, background_color='#d3dfda'),
         sg.Column(column3, background_color='#d3dfda')
@@ -361,7 +361,7 @@ def add_assignment():
     form = sg.FlexForm('On Track', default_element_size=(10, 3))
 
     layout = [
-        [sg.Button('Notification Settings', key='notifications', button_color=('white', '#001480'))],
+        [sg.Button('Notification Settings', key='notifications', button_color=('white', '#008B8B'))],
         [sg.Text('Input New Assignment Information', size=(30, 1), font=("Helvetica", 25))],
         [sg.Text('Assignment Title')],
         [sg.InputText('', size=(30, 2))],
@@ -444,7 +444,7 @@ def sub_assignment(linked_event_id):
     form = sg.FlexForm('On Track', default_element_size=(10, 3))
 
     layout = [
-        [sg.Button('Notification Settings', key='notifications', button_color=('white', '#001480'))],
+        [sg.Button('Notification Settings', key='notifications', button_color=('white', '#008B8B'))],
         [sg.Text('Input Sub-Assignment Information', size=(30, 1), font=("Helvetica", 25))],
         [sg.Text('Sub-Assignment Title')],
         [sg.InputText('', size=(30, 2))],
@@ -528,7 +528,7 @@ def add_job_application():
     form = sg.FlexForm('On Track', default_element_size=(10, 3))
 
     layout = [
-        [sg.Button('Notification Settings', key='notifications', button_color=('white', '#001480'))],
+        [sg.Button('Notification Settings', key='notifications', button_color=('white', '#008B8B'))],
         [sg.Text('Input New Job Application Information', size=(30, 1), font=("Helvetica", 25))],
         [sg.Text('Application Title')],
         [sg.InputText('', size=(30, 2))],
@@ -609,7 +609,7 @@ def job_sub_assignment(linked_event_id):
     form = sg.FlexForm('On Track', default_element_size=(10, 3))
 
     layout = [
-        [sg.Button('Notification Settings', key='notifications', button_color=('white', '#001480'))],
+        [sg.Button('Notification Settings', key='notifications', button_color=('white', '#008B8B'))],
         [sg.Text('Input Sub-Assignment Information', size=(30, 1), font=("Helvetica", 25))],
         [sg.Text('Sub-Assignment Title')],
         [sg.InputText('', size=(30, 2))],
@@ -690,7 +690,7 @@ def add_social():
     form = sg.FlexForm('On Track', default_element_size=(10, 3))
 
     layout = [
-        [sg.Button('Notification Settings', key='notifications', button_color=('white', '#001480'))],
+        [sg.Button('Notification Settings', key='notifications', button_color=('white', '#008B8B'))],
         [sg.Text('Input New Event Information', size=(30, 1), font=("Helvetica", 25))],
         [sg.Text('Event Title')],
         [sg.InputText('', size=(30, 2))],
@@ -773,7 +773,7 @@ def sub_social(linked_event_id):
     form = sg.FlexForm('On Track', default_element_size=(10, 3))
 
     layout = [
-        [sg.Button('Notification Settings', key='notifications', button_color=('white', '#001480'))],
+        [sg.Button('Notification Settings', key='notifications', button_color=('white', '#008B8B'))],
         [sg.Text('Input Errand Information', size=(30, 1), font=("Helvetica", 25))],
         [sg.Text('Errand Title')],
         [sg.InputText('', size=(30, 2))],
@@ -874,12 +874,12 @@ def manage_assignments():
     form = sg.FlexForm('On Track', default_element_size=(10, 3))
 
     layout = [
-        [sg.Button('Notification Settings', key='notifications', button_color=('white', '#001480'))],
+        [sg.Button('Notification Settings', key='notifications', button_color=('white', '#008B8B'))],
         [sg.Text('Upcoming Assignments', size=(30, 2), font=("Helvetica", 25))],
         [sg.Multiline(default_text=initial_school_list, disabled=True, size=(30, 10))],
         [sg.Text('Type in which event you want to edit (1 for first, 2 for second, etc.)')],
         [sg.InputText('', size=(30, 2))],
-        [sg.Button('Edit Assignment', key='edit_assignment', button_color=('white', '#001480')), sg.Button('Delete Assignment', key='delete_assignment', button_color=('white', '#001480'))],
+        [sg.Button('Edit Assignment', key='edit_assignment', button_color=('white', '#008B8B')), sg.Button('Delete Assignment', key='delete_assignment', button_color=('white', '#008B8B'))],
         [sg.Cancel()]
     ]
 
@@ -941,12 +941,12 @@ def manage_applications():
     form = sg.FlexForm('On Track', default_element_size=(10, 3))
 
     layout = [
-        [sg.Button('Notification Settings', key='notifications', button_color=('white', '#001480'))],
+        [sg.Button('Notification Settings', key='notifications', button_color=('white', '#008B8B'))],
         [sg.Text('Upcoming Applications', size=(30, 2), font=("Helvetica", 25))],
         [sg.Multiline(default_text=initial_job_list, disabled=True, size=(30, 10))],
         [sg.Text('Type in which item you want to edit (1 for first, 2 for second, etc.)')],
         [sg.InputText('', size=(30, 2))],
-        [sg.Button('Edit Item', key='edit_item', button_color=('white', '#001480')), sg.Button('Delete Item', key='delete_item', button_color=('white', '#001480'))],
+        [sg.Button('Edit Item', key='edit_item', button_color=('white', '#008B8B')), sg.Button('Delete Item', key='delete_item', button_color=('white', '#008B8B'))],
         [sg.Cancel()]
     ]
 
@@ -1008,12 +1008,12 @@ def manage_socials():
     form = sg.FlexForm('On Track', default_element_size=(10, 3))
 
     layout = [
-        [sg.Button('Notification Settings', key='notifications', button_color=('white', '#001480'))],
+        [sg.Button('Notification Settings', key='notifications', button_color=('white', '#008B8B'))],
         [sg.Text('Upcoming Events', size=(30, 2), font=("Helvetica", 25))],
         [sg.Multiline(default_text=initial_school_list, disabled=True, size=(30, 10))],
         [sg.Text('Type in which event you want to edit (1 for first, 2 for second, etc.)')],
         [sg.InputText('', size=(30, 2))],
-        [sg.Button('Edit Event', key='edit_event', button_color=('white', '#001480')), sg.Button('Delete Event', key='delete_event', button_color=('white', '#001480'))],
+        [sg.Button('Edit Event', key='edit_event', button_color=('white', '#008B8B')), sg.Button('Delete Event', key='delete_event', button_color=('white', '#008B8B'))],
         [sg.Cancel()]
     ]
 
@@ -1058,7 +1058,7 @@ def edit_page(chosen_event_id):
     form = sg.FlexForm('On Track', default_element_size=(10, 3))
 
     layout = [
-        [sg.Button('Notification Settings', key='notifications', button_color=('white', '#001480'))],
+        [sg.Button('Notification Settings', key='notifications', button_color=('white', '#008B8B'))],
         [sg.Text('Input New Information', size=(30, 1), font=("Helvetica", 25))],
         [sg.Text('New Title')],
         [sg.InputText('', size=(30, 2))],
