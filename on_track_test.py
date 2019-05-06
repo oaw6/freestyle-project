@@ -43,7 +43,7 @@ def writeeventtocsv(event_type, event_id, summary_text, start_time, end_time, at
         reader = csv.DictReader(csv_file)
         for row in reader:
             event_list.append(dict(row))
-    
+
     #Adds new event to list of dictionaries, converts back to csv and overwrites data file
     if event_type == 'school':
         event_list.append({"id":event_id, "summary":summary_text, "start":start_time, "end":end_time, "attendees":attendees})
@@ -77,7 +77,7 @@ def writeeventtocsv(event_type, event_id, summary_text, start_time, end_time, at
         else:
             pandas_data.to_csv('./data/sociallist.csv')
 
-def test_createeventid(): 
+def test_createeventid():
     assert createeventid('school', '2019-05-04T12:00:00%s', 'aaaaaaaaaa') == 'sc20190504120000aaaaaaaaaa'
 
 def test_writeeventtocsv():
