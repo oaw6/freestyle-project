@@ -1,8 +1,0 @@
-,id,summary,start,end,attendees,active
-0,so20190503133000dinner1511it,Dinner with friends,{'dateTime': '2019-05-03T13:30:00-04:00'},{'dateTime': '2019-05-03T14:00:00-04:00'},[],active
-1,so20190503143000dinner1511it,Dinner with friends,{'dateTime': '2019-05-03T14:30:00-04:00'},{'dateTime': '2019-05-03T15:00:00-04:00'},[],active
-2,so20190503153000dinner1511it,Dinner with friends,{'dateTime': '2019-05-03T15:30:00-04:00'},{'dateTime': '2019-05-03T16:00:00-04:00'},[],active
-3,sc20190503130000p13thon15assi,Python Assignment due at 13:00:00,{'dateTime': '2019-05-03T12:45:00-04:00'},{'dateTime': '2019-05-03T13:00:00-04:00'},[],active
-4,sc20190505120000government15,Government Essay due at 12:00:00,{'dateTime': '2019-05-05T11:45:00-04:00'},{'dateTime': '2019-05-05T12:00:00-04:00'},[],active
-5,sc20190504120000govt15essa1315,GOVT Essay First Draft due at 12:00:00,{'dateTime': '2019-05-04T11:45:00-04:00'},{'dateTime': '2019-05-04T12:00:00-04:00'},[],active
-6,sc20190504120000p13thon15proj,Python Project due at 12:00:00,{'dateTime': '2019-05-04T11:45:00-04:00'},{'dateTime': '2019-05-04T12:00:00-04:00'},[],active

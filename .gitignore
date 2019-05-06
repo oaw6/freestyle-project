@@ -1,5 +1,8 @@
 # .gitignore
 
+.pytest_cache
+__pycache__/
+
 # ignore credential files
 client_id
 client_id.json
